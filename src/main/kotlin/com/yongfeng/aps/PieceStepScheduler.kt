@@ -1,7 +1,6 @@
 package org.example.com.yongfeng.aps
 
 import com.yongfeng.aps.ExcelReader
-import com.yongfeng.aps.PieceStep
 import com.yongfeng.aps.ScheduleOptimizer
 
 // Main.kt
@@ -19,14 +18,4 @@ fun main() {
 
     println("\n优化后的厚度序列：")
     optimizedPieces.forEach { println("${it.sequence}: ${it.thickness}") }
-
-    // 计算并输出优化效果
-    fun calculateAverageThicknessDiff(list: List<PieceStep>): Double {
-        return list.zipWithNext { a, b -> Math.abs(a.thickness - b.thickness) }
-            .average()
-    }
-
-    println("\n优化效果：")
-    println("原始平均厚度差：${calculateAverageThicknessDiff(pieces)}")
-    println("优化后平均厚度差：${calculateAverageThicknessDiff(optimizedPieces)}")
 }
