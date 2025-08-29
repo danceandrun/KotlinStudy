@@ -13,16 +13,53 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "org.jetbrains.kotlin:kotlin-reflect"
-
-    testImplementation "org.jetbrains.kotlin:kotlin-test"
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-
+    // Apache POI
     implementation("org.apache.poi:poi:5.2.3")
     implementation("org.apache.poi:poi-ooxml:5.2.3")
+
+    implementation files('cplex.jar')
+
+    // 测试依赖
+    testImplementation "org.jetbrains.kotlin:kotlin-test"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5" // Kotlin 对 JUnit5 的支持
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.1' // 参数化测试支持
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.1' // JUnit5 测试引擎
+
+    // 断言库
+    testImplementation 'org.assertj:assertj-core:3.24.2' // 流式断言
+    // Mocking 框架
+    testImplementation 'io.mockk:mockk:1.13.8' // Kotlin 专用的 Mocking 框架
 }
 
 test {
     useJUnitPlatform()
+
+    // 配置测试日志显示
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        showExceptions = true
+        exceptionFormat = "full"
+        showCauses = true
+        showStackTraces = true
+        showStandardStreams = true // 显示标准输出和错误
+    }
+
+    // 配置测试环境
+    systemProperty "java.library.path", "D:\\CPlex\\cplex\\bin" // 设置 CPLEX 本地库路径
+
+    // 并行执行测试
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+    // 配置测试失败时继续执行
+    failFast = false // 设置为 true 可在第一个测试失败时停止
+
+    // 配置测试报告生成
+    reports {
+        html.required = true
+        junitXml.required = true
+    }
 }
 
 kotlin {
